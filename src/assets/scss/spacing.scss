@@ -1,0 +1,77 @@
+// List of sizes to generate for each
+$sizes: [0, .25, .5, 1, 1.5, 3];
+
+// Spacing to multiply the sizes by
+$spacing: 1rem;
+
+  @mixin generate($prefix, $property) {
+    // Loop through all of the sizes(we use @for rather than @each, as we want access to the index)
+    @for $i from 1 through length($sizes) {
+      // Get the size for the current index
+      $size: nth($sizes, $i);
+      
+      // Create the rule
+      .#{$prefix}-#{$i - 1} {
+        #{$property}: $spacing * $size;
+      }
+    }
+  }
+
+  @mixin generatePairs($prefix, $property1, $property2) {
+    // Loop through all of the sizes(we use @for rather than @each, as we want access to the index)
+    @for $i from 1 through length($sizes) {
+      // Get the size for the current index
+      $size: nth($sizes, $i);
+      
+      // Create the rule
+      .#{$prefix}-#{$i - 1} {
+        #{$property1}: $spacing * $size;
+        #{$property2}: $spacing * $size;
+      }
+    }
+  }
+
+  @mixin generateAutos($prefix, $property) {      
+      // Create the rule
+      .#{$prefix}-a {
+        #{$property}: auto;
+      }
+  }
+  
+  @mixin generatePairsAutos($prefix, $property1, $property2) {      
+    // Create the rule
+    .#{$prefix}-a {
+      #{$property1}: auto;
+      #{$property2}: auto;
+    }
+  }
+
+  $rules: [
+    [ml, margin-left],
+    [mt, margin-top],
+    [mb, margin-bottom],
+    [mr, margin-right],
+    [m, margin],
+    [pl, padding-left],
+    [pt, padding-top],
+    [pb, padding-bottom],
+    [pr, padding-right],
+    [p,  padding],
+  ];
+
+  $rulesPairs: [
+    [mx, margin-left, margin-right],
+    [my, margin-top, margin-bottom],
+    [px, padding-left, padding-right],
+    [py, padding-top, padding-bottom],
+  ]; 
+  
+  @each $item in $rules {
+    @include generate(nth($item, 1), nth($item, 2));
+    @include generateAutos(nth($item, 1), nth($item, 2));
+  }
+
+  @each $item in $rulesPairs {
+    @include generatePairs(nth($item, 1), nth($item, 2), nth($item, 3));
+    @include generatePairsAutos(nth($item, 1), nth($item, 2), nth($item, 3));
+  }
